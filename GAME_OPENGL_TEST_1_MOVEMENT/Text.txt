@@ -1,0 +1,16 @@
+TODO:
+
+-redo movement surface collision, have collision based off of functions/arrays or some way to not have to put a bunch of if statements into movement 
+(basically make it easier & cleaner to do wall collision!)
+
+-for collision make function that can be called apon that will return a 1 for permittable movement and 0 
+if collision.  it could possibly check an array of vertices of the hitboxes of entities.
+
+-add textures to objects!
+
+-add player physics of gravity outside of battle (like if you were in a platformer game instead of a ship in a bullet hell game)
+
+-inputs switched over to glfw inputs to save space and make easier to read!
+-have glew.dll be saved when programmed is installed inside the program x86 folder as a seperate folder (first have it checked if it is already installed with all the other prequisite libraries)
+
+-try to get Drawarray function into GameFuncXtra.c instead of Main.c and have it work
