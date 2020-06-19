@@ -1,0 +1,55 @@
+
+
+
+
+- loading images onto geometry      	 	by: 6/25/20
+- physics		           	 	by: 7/1/20
+- add basic HUD			   	 	by: 7/6/20
+- functions to make/load levels	   	 	by: 7/13/20
+- basic enemies			   	 	by: 7/16/20
+- home menu			    	 	by: 7/22/20
+- better pause menu		    	 	by: 7/24/20
+- different resolutions/graphical settings	by: 7/31/20
+- optimization					by: 8/4/20
+- multiplayer			   		by: if there is extra time it can be worked on
+
+
+Loading images onto geometry:
+find documentation on the stb_library
+	(if no documentation can be found, look for alternatives!)
+	-open documentation on stb_library to learn how to properly use it
+	-load a basic image onto a shape
+	-create a function to simplify loading images to specific vertices given
+physics:
+	-add basic gravity (for equation and explanations and such, search with this query in google, "kinematic equation for throwing a ball up") when outside boss fight
+	-calculate how fast you are falling outside of the boss battle
+	-add materials that can slow down a fall, make you move slower, speed you up, etc(ex: conveyors)
+	-when standing still weapons are more accurate (running and gunning is less accurate but allows you to dodge, chase enemies, etc)
+add a basic HUD:
+	have the following shown on screen: current active weapon[shown in bottom right], health[shown in top left], and money(only when collected[shown in top right]).
+functions to make/load levels:
+	-load phsysic data (where there is a solid object/wall)
+	-load data general (entities, items that are interactable, etc)
+	-load graphical data (where to display images/textures)
+	-function for cutscene
+	-funtion for interactable items
+	-function for interactable npc's
+	-function to save (saves what level you are on and all your important data like money, weapons, etc[add basic encryption to save data so people cannot just cheat in stuff easily])
+	-function to deny/disable certain other functions such as physics or just change their variables data
+	-function that is a trigger (trigger event areas)
+basic enemies:
+	-give basic thoughts (chase after player if within their view)
+	-give basic attacks (such as stopping to shoot their gun more accurately when you are at a farther distance or chasing and gunning to try to stay near you or like a sword/knife that 	they chase you with)
+home menu:
+	-a basic home menu layout that has a start button (which shows "Start new game" and "load save file"), credits and such (for libraries that require that you share any information),
+	and settings for mouse sensitivity, resolution/graphical settings, audio settings, and button layout
+better pause menu:
+
+different resolutions/graphical settings:
+	-setup the ability to choose what resolution you want the game to run in
+optimization:
+	-remove dependency on glew (while glew is nice and is easy to read, its license is restrictive and requires in the binary build of any program made with it to include the copyright 		notice which i would rather not be forced to add in)
+	-if there are any goto's or global variables, try to remove them
+	-just general house keeping
+multiplayer:
+	-if there is extra time, add the ability to play with other people either locally or maybe even online with websockets
