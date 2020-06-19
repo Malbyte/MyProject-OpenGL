@@ -1,3 +1,0 @@
-platformer/shoot em up(you have weapons that allow you to kill creatures on the screen unlike mario and) that when gets to the end goes into a fight where it is a partial bullet-hell
-within the middle of the platforming portion of the level their is usually a npc that will talk to you, some will betray you while others don't, they may give you stronger weapons/money/potions/skip fights/ or will help you with the final boss(the finale)
-16bit graphics with simpler music that uses mostly square, triangle & sawtooth so it fits the theme
