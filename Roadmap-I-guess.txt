@@ -2,11 +2,11 @@
 
 
 
-- loading images onto geometry      	 	by: 6/25/20
-- physics		           	 	by: 7/1/20
-- add basic HUD			   	 	by: 7/6/20
-- functions to make/load levels	   	 	by: 7/13/20
-- basic enemies			   	 	by: 7/16/20
+- loading images onto geometry      	 	by: 6/26/20
+- physics		           	 	by: 7/2/20
+- add basic HUD			   	 	by: 7/7/20
+- functions to make/load levels	   	 	by: 7/14/20
+- basic enemies			   	 	by: 7/17/20
 - home menu			    	 	by: 7/22/20
 - better pause menu		    	 	by: 7/24/20
 - different resolutions/graphical settings	by: 7/31/20
