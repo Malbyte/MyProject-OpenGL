@@ -4,8 +4,11 @@
 #include <time.h>
 #include "main.h"
 #include "GameFuncXtra.h"
+#include "Dependencies/stb-master/stb_image.h"
+#define MAIN_H
+#define move_w 119
 //im dearly sorry if you are trying to read my spagetti code, i tried having the global floats enter and exit through *int and &int inside the move function parenthesis but int* cannot be compared with normal ints... one day it may be revisited and redone to make it "cleaner"
-float a, b, c, d, e, f, g, h, i, y, z, b1a, b1b, b1c, b1d, b1e, b1f, b1g, b1h, bv1, bv2, bv3, bv4, bv5, bv6, bv7, bv8;
+float a, b, c, d, e, f, g, h, i, y, z, bv1, bv2, bv3, bv4, bv5, bv6, bv7, bv8;
 int loo = 0, audio = 1, audst1 = 0, facing = 1, bullet1onscreen = 0, inbattle = 0, escprsd = 0, devmde = 0;
 const GLint WIDTH = 800, HEIGHT = 600;
 //im sorry that these are going to be declared here, i do not know why you are here reading this, you should not be working with these files (unless permitted) and if so there is most likely a higher level program to do that for you
@@ -24,9 +27,7 @@ const GLchar *fragmentShaderSourcemap1 = "#version 330 core\n"
 "color = vec4( 1.0f, 0.5f, 0.2f, 1.0f );\n"
 "}\n";
 
-
-
-move(int *error) {
+void map_audio() {
 	clock_t uptime = clock() / (CLOCKS_PER_SEC / 1000);
 	if (loo == 0) {
 		if (inbattle == 1) {
@@ -47,6 +48,10 @@ move(int *error) {
 		//58250
 	}
 
+}
+
+move(int *error, struct Bullet Bullet1) {
+	clock_t uptime = clock() / (CLOCKS_PER_SEC / 1000);
 	GLuint vertexShader, fragmentShader, shaderProgrammap1, shaderProgrammap2, vertexShaderBOSS, shaderProgramBOSS, fragmentShaderBOSS;
 
 	//keypress recording
@@ -67,7 +72,7 @@ move(int *error) {
 	ProgramShadR(&shaderProgrammap1, vertexShader, fragmentShader);
 
 
-
+	//WALLS
 	GLfloat vertices1[] =
 	{
 	-0.81f, 0.81f, 0.0f,
@@ -199,27 +204,27 @@ move(int *error) {
 	///enemy/bullet moves now
 
 	//printf("%.6f", b1b);
-	if (b1b >= 1.0f) {
+	if (Bullet1.v2 >= 1.0f) {
 		bullet1onscreen = 0;
 	}
 	if (inbattle == 1){
-		if (b1b >= bv6 + 0.02 && b1a >= bv1) {
-			if (b1c < bv7) {
+		if (Bullet1.v2 >= bv6 + 0.02 && Bullet1.v1 >= bv1) {
+			if (Bullet1.v3 < bv7) {
 				bullet1onscreen = 0;
-				b1b = 1.1f;
-				b1d = 1.1f;
-				b1f = 1.1f;
-				b1h = 1.1f;
-				//reads if the bullet is where the enemy ship is
+				Bullet1.v2 = 1.1f;
+				Bullet1.v4 = 1.1f;
+				Bullet1.v6 = 1.1f;
+				Bullet1.v8 = 1.1f;
+				//reads if the bullet is in contact with enemy ship
 			}
 		}
 	}
 
 	if (bullet1onscreen == 1) {
-		b1b = b1b + 0.06f;
-		b1d = b1d + 0.06f;
-		b1f = b1f + 0.06f;
-		b1h = b1h + 0.06f;
+		Bullet1.v2 = Bullet1.v2 + 0.06f;
+		Bullet1.v4 = Bullet1.v4 + 0.06f;
+		Bullet1.v6 = Bullet1.v6 + 0.06f;
+		Bullet1.v8 = Bullet1.v8 + 0.06f;
 	}
 
 //-=-=-=-=-=-keypress recording-=-=-=-=-=-
@@ -247,23 +252,23 @@ move(int *error) {
 	//all of this should be moved to the main file Main.c and there should be a 
 	if (100000 & SPCEKEYCURR) {
 			if (bullet1onscreen != 1) {
-				b1b =  c + 0.04f;
-				b1a = f - 0.005f;
-				b1d = c + 0.04f;
-				b1c = f - -0.005f;
-				b1f = c + 0.06f;
-				b1e = f - -0.005f;
-				b1h = c + 0.06f;
-				b1g = f - 0.005f;
+				Bullet1.v1 = f - 0.005f;
+				Bullet1.v2 = c + 0.04f;
+				Bullet1.v3 = f - -0.005f;
+				Bullet1.v4 = c + 0.04f;
+				Bullet1.v5 = f - -0.005f;
+				Bullet1.v6 = c + 0.06f;
+				Bullet1.v7 = f - 0.005f;
+				Bullet1.v8 = c + 0.06f;
 				bullet1onscreen = 1;
 			}
 	}
 
 
 
-	if (100000 & ALTKEYCURR) {
-		if (devmde == 1) {
+	if (devmde == 1) {
 			//allows testing of different parts of level at will... Remove in production!
+		if (100000 & ALTKEYCURR) {
 			Sleep(125);
 			if (inbattle == 1) {
 				inbattle = 0;
@@ -285,14 +290,8 @@ move(int *error) {
 		facing = 1;
 		if (c <= g) {
 			if(inbattle == 0){
-				if (c < 0.8f || e < -0.8f || c > 0.849f || d > 0.8f) {//wall one
-					if (c < -0.86f || e < -0.8f || c > -0.849f || d > 0.8f) {
-						for (int x = 0; x <= 0; x++) {
-							MoveWKEY();
-							//change player's movement/position
-							//do a second time so it still goes double but it looks smoother
-						}
-					}
+				if (Solids_Hitboxes(move_w) == 0) {
+					MoveWKEY();
 				}
 			}
 			if (inbattle == 1) {
@@ -351,7 +350,25 @@ move(int *error) {
 	}
 
 
-
+	Solids_Hitboxes(move_w);
 	error = 0;
 	return 1;
+}
+
+Solids_Hitboxes(char Type_Of_Direction) {
+	if (Type_Of_Direction == 119) {
+		if (c < 0.8f || e < -0.8f || /*c > 0.849f ||*/ d > 0.8f) {//wall one
+			if (c < -0.86f || e < -0.8f || c > -0.849f || d > 0.8f) {
+				return 0;
+			}
+			else
+			{
+				return 1;
+			}
+		}
+		else
+		{
+			return 1;
+		}
+	}
 }

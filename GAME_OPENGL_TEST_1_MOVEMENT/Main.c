@@ -1,37 +1,55 @@
 #include <gl/glew.h>
+//something to help replace glew maybe? https://www.rastertek.com/gl40tut03.html
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <Windows.h>
 #include <time.h>
 #include "GameFuncXtra.h"
 #include "main.h"
-
+#define STB_IMAGE_IMPLEMENTATION
+#include "Dependencies/stb-master/stb_image.h"
 //#pragma comment (lib , "winmm.lib")
 //^for playsound it requires winmm.lib and that apparently is not included so go to linker, input, additional dependecies and add as a new lib winmm.lib and you will not need #pragma comment and get the errors
-
-
-//Draw to screen (simple version)
 
 
 //make all Global variables local! 
 int x = 0, error;
 float a = -0.04f, b = -0.04f, c = 0.04f, d = -0.04f, e = 0.04f, f = 0.00f, g = 0.98f, h = -0.98f, i = -0.97f, z = 0.0097f, bv1 = 0.7f, bv2 = 0.8f, bv3 = 0.8f, bv4 = 0.8f, bv5 = 0.8f, bv6 = 0.7f, bv7 = 0.9f, bv8 = 0.8f;
-float b1a = 0.0f, b1b = 0.0f, b1c = 0.0f, b1d = 0.0f, b1e = 0.0f, b1f = 0.0f, b1g = 0.0f, b1h = 0.0f;//this is the fallback/normal speed/size/borders/bullets
+//this is the fallback/normal speed/size/borders/bullets
+
+
+
+
 const GLint WIDTH, HEIGHT;
 const GLchar *vertexShaderSource = "#version 330 core\n"
 "layout ( location = 0 ) in vec3 position;\n"
+"layout (location = 1) in vec2 aTexCoord;\n"
+"out vec2 TexCoord;/n"
 "void main()\n"
 "{\n"
 "gl_Position = vec4( position.x, position.y, position.z, 1.0);\n"
+"TexCoord = aTexCoord;\n"
 "}";
 
 const GLchar *fragmentShaderSource = "#version 330 core\n"
 "out vec4 color;\n"
+
+"in vec2 TexCoord;\n"
+
+"uniform sampler2D ourTexture;\n"
 "void main()\n"
 "{\n"
-"color = vec4( 1.0f, 0.5f, 0.2f, 1.0f );\n"
+"FragColor = texture(ourTexture, TexCoord);\n"
+"color = vec4( 0.2f, 0.7f, 0.2f, 1.0f );\n"
 "}\n";
+
+
+
+#ifdef _WIN64
+
+#include <Windows.h>
+
+struct Bullet Bullet1;
 
 main() {
 	GLuint vertexShader, fragmentShader;
@@ -79,6 +97,37 @@ main() {
 
 	glViewport(0, 0, screenwidth, screenheight);
 
+	//texture loading
+	unsigned int texture;
+	//quick reminder that unsigned means to instead start from the lowest value in the negatives to the highest value in positives, it instead shifts all over so there is only positives (instead of starting from -x all the way to x, it is instead from 0 to 2x)
+	int width, height, nrChannels;
+	unsigned char *data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
+	//stbi_load loads image data (selects image in first parameter) then outputs the width, height and nrChannels (and returns values required to load image as texture)
+	glGenTextures(1, &texture);
+	//glGenTextures takes how many textures we want to have generated then stores them inside the integer which is being pointed to
+	glBindTexture(GL_TEXTURE_2D, texture);
+	//lets you set what type of data will be stored inside, in this case the format for 2d textures will be stored inside of texture
+	
+	//setting of currently bound texture of texture wrapping and filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	//glTexImage2D generates a 2d texture using the 2d texture data loaded from an image.
+	//glTexImage2D(texture target(will only generate texture of same target so GL_TEXURE 1D/3D will not be generated as well), mipmap level, what format to sture texture(*for example this current image is RGB therefore we shall tell the function to store it as such*), width of new texture, height of new texture, 0 (legacy command, seems uneeded, maybe check it out sometime?), format of source image(RGB, CMYK, etc), datatype of image, image data)
+	//The top of page 60 in LearnOpengl goes into better detail on glTexImage2D!!
+	glGenerateMipmap(GL_TEXTURE_2D);
+	//
+	stbi_image_free(data);
+	//freeing image from memory so it is not floating about taking up room.
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+
+
 
 	//vertex shaders
 
@@ -97,12 +146,13 @@ main() {
 
 	//^attachment of shaders to glCreateProgram function^
 	//setting of vertices for object
-	GLfloat vertices[] =
-	{
-		d, a, 0.0f,	//bottom left
-		e, b, 0.0f,	//bottom right
-		f, c, 0.0f  //top
+	GLfloat Vertices[] =
+	{ //positions //texture coords
+		d, 1.0f, 0.0f, 1.0f, 1.0f,//bottom left
+		1.0f, 1.0f, 0.0f, 1.0f, 0.0f,//bottom right
+		f, c, 0.0f, 0.0f, 1.0f//top
 	};
+	///REMEMBER TO ADD SECOND VERTEXATTRIBPOINTER!!!!
 	//^setting of vertices for object^
 	//setting of vertex Arrays object & vertex Buffers object
 	GLuint VBO, VAO;
@@ -112,15 +162,15 @@ main() {
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
 
 
 
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid *)0);
+	//the Attrib pointers
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *)0);
 	glEnableVertexAttribArray(0);
-
-
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindVertexArray(0);
@@ -145,10 +195,10 @@ main() {
 
 	GLfloat verticesbullet1[] =
 	{
-	b1a, b1b, 0.0f,
-	b1c, b1d, 0.0f,
-	b1e, b1f, 0.0f,
-	b1g, b1h, 0.0f
+	Bullet1.v1, Bullet1.v2, 0.0f,
+	Bullet1.v3, Bullet1.v4, 0.0f,
+	Bullet1.v5, Bullet1.v6, 0.0f,
+	Bullet1.v7, Bullet1.v8, 0.0f
 	};
 	//GL_Triangle_Fan has one central vertex and other vertices branch off and kinda snake back
 
@@ -187,12 +237,12 @@ main() {
 		//checking for events, clearing, rendering OpenGL, etc
 		glfwPollEvents();
 		//is to show window is responding ^
-		
+		map_audio();
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		//this is here to not have a blank/black background ^
 		glClear(GL_COLOR_BUFFER_BIT);
 		//this is to clear window for next draw ^
-		move(&error);
+		move(&error, &Bullet1);
 		if (error == 1) {
 			printf("Move_Function_Error");
 		}
@@ -230,27 +280,27 @@ main() {
 
 
 		GLfloat vertices[] =
-		{
-			d, a, 0.0f, //bottom left
-			e, b, 0.0f,//bottom right
-			f, c, 0.0f,//top
+		{ //positions //texture coords
+			d, a, 0.0f, 1.0f, 1.0f,//bottom left
+			e, b, 0.0f, 1.0f, 0.0f,//bottom right
+			f, c, 0.0f, 0.0f, 1.0f//top
 		};
-
 		//draw opengl stuff
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 		glUseProgram(shaderProgram);
 		glBindVertexArray(VAO);
+		//glDrawElements(GL_TRIANGLES, 3, GL_FLOAT, 0);
 		glDrawArrays(GL_TRIANGLES, 0, 3);//3 symbolizes the amount of vertices being added
 		glBindVertexArray(0);
-
+		
 		//drawing bullets on screen
 		GLfloat verticesbullet1[] =
 		{
-		b1a, b1b, 0.0f,
-		b1c, b1d, 0.0f,
-		b1e, b1f, 0.0f,
-		b1g, b1h, 0.0f
+		Bullet1.v1, Bullet1.v2, 0.0f,
+		Bullet1.v3, Bullet1.v4, 0.0f,
+		Bullet1.v5, Bullet1.v6, 0.0f,
+		Bullet1.v7, Bullet1.v8, 0.0f
 		};
 		glBindBuffer(GL_ARRAY_BUFFER, VBObullet1);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(verticesbullet1), verticesbullet1, GL_STATIC_DRAW);
@@ -286,6 +336,14 @@ main() {
 		}
 	}
 }
+#else
+#error OS NOT SUPPORTED
+#endif
+
+
+
+
+
 
 
 
