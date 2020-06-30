@@ -9,8 +9,12 @@
 #define move_w 119
 //im dearly sorry if you are trying to read my spagetti code, i tried having the global floats enter and exit through *int and &int inside the move function parenthesis but int* cannot be compared with normal ints... one day it may be revisited and redone to make it "cleaner"
 float a, b, c, d, e, f, g, h, i, y, z, bv1, bv2, bv3, bv4, bv5, bv6, bv7, bv8;
-int loo = 0, audio = 1, audst1 = 0, facing = 1, bullet1onscreen = 0, inbattle = 0, escprsd = 0, devmde = 0;
+int loo = 0, audio = 1, audst1 = 0, facing = 1, bullet1onscreen = 0, inbattle = 0, escprsd = 0, devmde = 0, load;
 const GLint WIDTH = 800, HEIGHT = 600;
+GLuint vertexShader, fragmentShader, shaderProgrammap1, shaderProgrammap2, vertexShaderBOSS, shaderProgramBOSS, fragmentShaderBOSS;
+GLuint VBOmap1, VAOmap1;
+GLuint VBOmap2, VAOmap2;
+GLuint VBOBOSS, VAOBOSS;
 //im sorry that these are going to be declared here, i do not know why you are here reading this, you should not be working with these files (unless permitted) and if so there is most likely a higher level program to do that for you
 
 const GLchar *vertexShaderSourcemap1 = "#version 330 core\n"
@@ -26,45 +30,7 @@ const GLchar *fragmentShaderSourcemap1 = "#version 330 core\n"
 "{\n"
 "color = vec4( 1.0f, 0.5f, 0.2f, 1.0f );\n"
 "}\n";
-
-void map_audio() {
-	clock_t uptime = clock() / (CLOCKS_PER_SEC / 1000);
-	if (loo == 0) {
-		if (inbattle == 1) {
-			mciSendString("open audio//fight_song_game_2d_beginning.mp3 type mpegvideo alias boss_battle", NULL, 0, 0);
-			mciSendString("play boss_battle", NULL, 0, NULL);
-			//setup audio beginning and play till the end of (& four measures) of the main melodies singing in harmony then play that specific harmony(and 4 measures after) over and over until a change in music may happen and have it end (or just switch over)
-			audst1 = uptime + 82200;
-			loo = 1;
-			//printf(" what ");
-		}
-	}
-	if (uptime >= audst1) {
-		mciSendString("close boss_battle", NULL, 0, 0);
-		mciSendString("open audio//fight_song_game_2d_middle.mp3 type mpegvideo alias boss_battle", NULL, 0, 0);
-		mciSendString("play boss_battle", NULL, 0, NULL);
-		audst1 = audst1 + 58000;
-		printf(" wut ");
-		//58250
-	}
-
-}
-
-move(int *error, struct Bullet Bullet1) {
-	clock_t uptime = clock() / (CLOCKS_PER_SEC / 1000);
-	GLuint vertexShader, fragmentShader, shaderProgrammap1, shaderProgrammap2, vertexShaderBOSS, shaderProgramBOSS, fragmentShaderBOSS;
-
-	//keypress recording
-	SHORT WKEYCURR = GetAsyncKeyState(0x57);
-	SHORT SKEYCURR = GetAsyncKeyState(0x53);
-	SHORT AKEYCURR = GetAsyncKeyState(0x41);
-	SHORT DKEYCURR = GetAsyncKeyState(0x44);
-	SHORT ESCKEYCURR = GetAsyncKeyState(VK_ESCAPE);
-	SHORT SPCEKEYCURR = GetAsyncKeyState(VK_SPACE);
-	SHORT BCKLEYCURR = GetAsyncKeyState(VK_BACK);
-	SHORT ALTKEYCURR = GetAsyncKeyState(VK_MENU);
-
-
+void createprograms() {
 	vertexShadR(&vertexShader, vertexShaderSourcemap1);
 
 	fragmentShadR(&fragmentShader, fragmentShaderSourcemap1);
@@ -83,7 +49,6 @@ move(int *error, struct Bullet Bullet1) {
 	//GL_Triangle_Fan has one central vertex and other vertices branch off and kinda snake back
 
 
-	GLuint VBOmap1, VAOmap1;
 	glGenVertexArrays(1, &VAOmap1);
 	glGenBuffers(1, &VBOmap1);
 
@@ -104,9 +69,7 @@ move(int *error, struct Bullet Bullet1) {
 
 	glBindVertexArray(0);
 
-
 	ProgramShadR(&shaderProgrammap2, vertexShader, fragmentShader);
-
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
@@ -122,7 +85,6 @@ move(int *error, struct Bullet Bullet1) {
 	//GL_Triangle_Fan has one central vertex and other vertices branch off and kinda snake back
 
 
-	GLuint VBOmap2, VAOmap2;
 	glGenVertexArrays(1, &VAOmap2);
 	glGenBuffers(1, &VBOmap2);
 
@@ -153,13 +115,14 @@ move(int *error, struct Bullet Bullet1) {
 	vertexShadR(&vertexShaderBOSS, vertexShaderSourcemap1);
 
 
-	
 	fragmentShadR(&fragmentShaderBOSS, fragmentShaderSourcemap1);
 
 
 
-	ProgramShadR(&shaderProgramBOSS, vertexShader, fragmentShader);
-
+	shaderProgramBOSS = glCreateProgram();
+	glAttachShader(shaderProgramBOSS, vertexShader);
+	glAttachShader(shaderProgramBOSS, fragmentShader);
+	glLinkProgram(shaderProgramBOSS);
 	GLfloat verticesBOSS[] =
 	{
 	bv1, bv2, 0.0f,
@@ -169,8 +132,6 @@ move(int *error, struct Bullet Bullet1) {
 	};
 	//GL_Triangle_Fan has one central vertex and other vertices branch off and kinda snake back
 
-
-	GLuint VBOBOSS, VAOBOSS;
 	glGenVertexArrays(1, &VAOBOSS);
 	glGenBuffers(1, &VBOBOSS);
 
@@ -190,6 +151,45 @@ move(int *error, struct Bullet Bullet1) {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindVertexArray(0);
+}
+void map_audio() {
+	clock_t uptime = clock() / (CLOCKS_PER_SEC / 1000);
+	if (loo == 0) {
+		if (inbattle == 1) {
+			mciSendString("open audio//fight_song_game_2d_beginning.mp3 type mpegvideo alias boss_battle", NULL, 0, 0);
+			mciSendString("play boss_battle", NULL, 0, NULL);
+			//setup audio beginning and play till the end of (& four measures) of the main melodies singing in harmony then play that specific harmony(and 4 measures after) over and over until a change in music may happen and have it end (or just switch over)
+			audst1 = uptime + 82200;
+			loo = 1;
+			//printf(" what ");
+		}
+	}
+	if (uptime >= audst1) {
+		mciSendString("close boss_battle", NULL, 0, 0);
+		mciSendString("open audio//fight_song_game_2d_middle.mp3 type mpegvideo alias boss_battle", NULL, 0, 0);
+		mciSendString("play boss_battle", NULL, 0, NULL);
+		audst1 = audst1 + 58000;
+		printf(" wut ");
+		//58250
+	}
+
+}
+
+move(int *error, struct Bullet Bullet1) {
+	clock_t uptime = clock() / (CLOCKS_PER_SEC / 1000);
+
+	//keypress recording
+	SHORT WKEYCURR = GetAsyncKeyState(0x57);
+	SHORT SKEYCURR = GetAsyncKeyState(0x53);
+	SHORT AKEYCURR = GetAsyncKeyState(0x41);
+	SHORT DKEYCURR = GetAsyncKeyState(0x44);
+	SHORT ESCKEYCURR = GetAsyncKeyState(VK_ESCAPE);
+	SHORT SPCEKEYCURR = GetAsyncKeyState(VK_SPACE);
+	SHORT BCKLEYCURR = GetAsyncKeyState(VK_BACK);
+	SHORT ALTKEYCURR = GetAsyncKeyState(VK_MENU);
+
+
+	
 	if(inbattle == 0){
 		Drawarray(shaderProgrammap1, VAOmap1, 4, GL_TRIANGLE_FAN);
 		Drawarray(shaderProgrammap2, VAOmap2, 4, GL_TRIANGLE_FAN);
@@ -200,7 +200,10 @@ move(int *error, struct Bullet Bullet1) {
 	}
 	//all types of GLenum mode types for glDrawArrays & GLDrawElements: GL_TRIANGLE_FAN, GL_TRIANGLE_STRIP, GL_TRIANGLES, GL_POINTS, GL_LINES, GL_LINE_STRIP, GL_LINE_LOOP
 	glBindVertexArray(0);
-
+	glDeleteProgram(shaderProgramBOSS);
+	glDeleteProgram(shaderProgrammap2);
+	glDeleteProgram(shaderProgrammap1);
+	
 	///enemy/bullet moves now
 
 	//printf("%.6f", b1b);

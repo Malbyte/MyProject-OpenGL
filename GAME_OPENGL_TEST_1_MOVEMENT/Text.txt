@@ -18,3 +18,5 @@ if collision.  it could possibly check an array of vertices of the hitboxes of e
 
 
 -a star in a comment may usually mean to fact check the statement
+
+-ProgramShadR is causing memory leak issues

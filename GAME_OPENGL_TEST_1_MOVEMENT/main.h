@@ -24,3 +24,4 @@ void MoveSKEY();
 void MoveAKEY();
 void MoveDKEY();
 void map_audio();
+void createprograms();

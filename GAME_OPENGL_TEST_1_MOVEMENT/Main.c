@@ -22,27 +22,45 @@ float a = -0.04f, b = -0.04f, c = 0.04f, d = -0.04f, e = 0.04f, f = 0.00f, g = 0
 
 const GLint WIDTH, HEIGHT;
 const GLchar *vertexShaderSource = "#version 330 core\n"
-"layout ( location = 0 ) in vec3 position;\n"
-"layout (location = 1) in vec2 aTexCoord;\n"
-"out vec2 TexCoord;/n"
+"layout(location = 0) in vec3 aPos;\n"
+"layout(location = 1) in vec3 aColor;\n"
+"layout(location = 2) in vec2 aTexCoord;\n"
+
+"out vec3 ourColor;\n"
+"out vec2 TexCoord;\n"
+
 "void main()\n"
 "{\n"
-"gl_Position = vec4( position.x, position.y, position.z, 1.0);\n"
-"TexCoord = aTexCoord;\n"
-"}";
-
+"	gl_Position = vec4( aPos, 1.0);\n"
+"	ourColor = aColor;\n"
+"	TexCoord = aTexCoord;\n"
+"}\n";
 const GLchar *fragmentShaderSource = "#version 330 core\n"
-"out vec4 color;\n"
+"out vec4 FragColor;\n"
 
+"in vec3 ourColor;\n"
 "in vec2 TexCoord;\n"
 
 "uniform sampler2D ourTexture;\n"
+
 "void main()\n"
 "{\n"
-"FragColor = texture(ourTexture, TexCoord);\n"
-"color = vec4( 0.2f, 0.7f, 0.2f, 1.0f );\n"
+"	FragColor = texture(ourTexture, TexCoord);\n"
+//"FragColor = vec4(ourColor, 1.0);\n"
 "}\n";
+const GLchar *vertexShaderSourcebul = "#version 330 core\n"
+"layout ( location = 0 ) in vec3 position;\n"
+"void main()\n"
+"{\n"
+"gl_Position = vec4( position.x, position.y, position.z, 1.0);\n"
+"}";
 
+const GLchar *fragmentShaderSourcebul = "#version 330 core\n"
+"out vec4 color;\n"
+"void main()\n"
+"{\n"
+"color = vec4( 1.0f, 0.5f, 0.2f, 1.0f );\n"
+"}\n";
 
 
 #ifdef _WIN64
@@ -97,34 +115,6 @@ main() {
 
 	glViewport(0, 0, screenwidth, screenheight);
 
-	//texture loading
-	unsigned int texture;
-	//quick reminder that unsigned means to instead start from the lowest value in the negatives to the highest value in positives, it instead shifts all over so there is only positives (instead of starting from -x all the way to x, it is instead from 0 to 2x)
-	int width, height, nrChannels;
-	unsigned char *data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
-	//stbi_load loads image data (selects image in first parameter) then outputs the width, height and nrChannels (and returns values required to load image as texture)
-	glGenTextures(1, &texture);
-	//glGenTextures takes how many textures we want to have generated then stores them inside the integer which is being pointed to
-	glBindTexture(GL_TEXTURE_2D, texture);
-	//lets you set what type of data will be stored inside, in this case the format for 2d textures will be stored inside of texture
-	
-	//setting of currently bound texture of texture wrapping and filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	//glTexImage2D generates a 2d texture using the 2d texture data loaded from an image.
-	//glTexImage2D(texture target(will only generate texture of same target so GL_TEXURE 1D/3D will not be generated as well), mipmap level, what format to sture texture(*for example this current image is RGB therefore we shall tell the function to store it as such*), width of new texture, height of new texture, 0 (legacy command, seems uneeded, maybe check it out sometime?), format of source image(RGB, CMYK, etc), datatype of image, image data)
-	//The top of page 60 in LearnOpengl goes into better detail on glTexImage2D!!
-	glGenerateMipmap(GL_TEXTURE_2D);
-	//
-	stbi_image_free(data);
-	//freeing image from memory so it is not floating about taking up room.
-	glBindTexture(GL_TEXTURE_2D, texture);
 
 
 
@@ -141,16 +131,13 @@ main() {
 	GLuint shaderProgram;
 	ProgramShadR(&shaderProgram, vertexShader, fragmentShader);
 
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-
 	//^attachment of shaders to glCreateProgram function^
 	//setting of vertices for object
-	GLfloat Vertices[] =
-	{ //positions //texture coords
-		d, 1.0f, 0.0f, 1.0f, 1.0f,//bottom left
-		1.0f, 1.0f, 0.0f, 1.0f, 0.0f,//bottom right
-		f, c, 0.0f, 0.0f, 1.0f//top
+	GLfloat vertices[] =
+	{	//positions	       //colors	          //texture coords
+		d, a, 0.0f,  1.0f, 0.5f, 0.2f,  1.0f, 1.0f,
+		e, b, 0.0f,  0.0f, 1.0f, 0.0f,  1.0f, 0.0f,
+		f, c, 0.0f,  0.0f, 0.0f, 1.0f,  0.0f, 1.0f
 	};
 	///REMEMBER TO ADD SECOND VERTEXATTRIBPOINTER!!!!
 	//^setting of vertices for object^
@@ -162,15 +149,20 @@ main() {
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 
 
 	//the Attrib pointers
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (void*)(3 * sizeof(float)));
+
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindVertexArray(0);
@@ -180,9 +172,44 @@ main() {
 	
 
 
+	//texture loading
+	unsigned int texture;
+	//quick reminder that unsigned means to instead start from the lowest value in the negatives to the highest value in positives, it instead shifts all over so there is only positives (instead of starting from -x all the way to x, it is instead from 0 to 2x)
+	int width, height, nrChannels;
+	unsigned char *data = stbi_load("temporary-texture.jpg", &width, &height, &nrChannels, 0);
+	//stbi_load loads image data (selects image in first parameter) then outputs the width, height and nrChannels (and returns values required to load image as texture)
+	//setting of currently bound texture of texture wrapping and filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glGenTextures(1, &texture);
+	//glGenTextures takes how many textures we want to have generated then stores them inside the integer which is being pointed to
+	glBindTexture(GL_TEXTURE_2D, texture);
+	//lets you set what type of data will be stored inside, in this case the format for 2d textures will be stored inside of texture
+
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	//glTexImage2D generates a 2d texture using the 2d texture data loaded from an image.
+	//glTexImage2D(texture target(will only generate texture of same target so GL_TEXURE 1D/3D will not be generated as well), mipmap level, what format to sture texture(*for example this current image is RGB therefore we shall tell the function to store it as such*), width of new texture, height of new texture, 0 (legacy command, seems uneeded, maybe check it out sometime?), format of source image(RGB, CMYK, etc), datatype of image, image data)
+	//The top of page 60 in LearnOpengl goes into better detail on glTexImage2D!!
+	glGenerateMipmap(GL_TEXTURE_2D);
+	//
+	stbi_image_free(data);
+	//freeing image from memory so it is not floating about taking up room.
+
+
+
+
+
 
 	//bullets on screen
+	//vertex shaders
 
+	vertexShadR(&vertexShader, vertexShaderSourcebul);
+	//fragment shaders
+
+	fragmentShadR(&fragmentShader, fragmentShaderSourcebul);
 
 	GLuint shaderProgrambullet1 = glCreateProgram();
 	glAttachShader(shaderProgrambullet1, vertexShader);
@@ -227,12 +254,14 @@ main() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindVertexArray(0);
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
 
 
 	////
 	inbattle = 1;
 	////
-
+	createprograms();
 	while (!glfwWindowShouldClose(window)) {
 		//checking for events, clearing, rendering OpenGL, etc
 		glfwPollEvents();
@@ -280,10 +309,10 @@ main() {
 
 
 		GLfloat vertices[] =
-		{ //positions //texture coords
-			d, a, 0.0f, 1.0f, 1.0f,//bottom left
-			e, b, 0.0f, 1.0f, 0.0f,//bottom right
-			f, c, 0.0f, 0.0f, 1.0f//top
+		{	//positions	       //colors	          //texture coords
+			d, a, 0.0f,  1.0f, 0.5f, 0.2f,  1.0f, 1.0f,
+			e, b, 0.0f,  0.0f, 1.0f, 0.0f,  1.0f, 0.0f,
+			f, c, 0.0f,  0.0f, 0.0f, 1.0f,  0.0f, 1.0f
 		};
 		//draw opengl stuff
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
