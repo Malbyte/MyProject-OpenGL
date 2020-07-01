@@ -30,6 +30,10 @@ const GLchar *fragmentShaderSourcemap1 = "#version 330 core\n"
 "{\n"
 "color = vec4( 1.0f, 0.5f, 0.2f, 1.0f );\n"
 "}\n";
+void deleteVAO() {
+	glDeleteVertexArrays(3, &VAOBOSS, &VAOmap1, &VAOmap2);
+}
+
 void createprograms() {
 	vertexShadR(&vertexShader, vertexShaderSourcemap1);
 
@@ -120,9 +124,12 @@ void createprograms() {
 
 
 	shaderProgramBOSS = glCreateProgram();
-	glAttachShader(shaderProgramBOSS, vertexShader);
-	glAttachShader(shaderProgramBOSS, fragmentShader);
+	glAttachShader(shaderProgramBOSS, vertexShaderBOSS);
+	glAttachShader(shaderProgramBOSS, fragmentShaderBOSS);
 	glLinkProgram(shaderProgramBOSS);
+
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
 	GLfloat verticesBOSS[] =
 	{
 	bv1, bv2, 0.0f,
@@ -151,27 +158,21 @@ void createprograms() {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindVertexArray(0);
+	glDeleteBuffers(3, &VBOBOSS, &VBOmap1, &VBOmap2);
 }
 void map_audio() {
 	clock_t uptime = clock() / (CLOCKS_PER_SEC / 1000);
 	if (loo == 0) {
 		if (inbattle == 1) {
 			mciSendString("open audio//fight_song_game_2d_beginning.mp3 type mpegvideo alias boss_battle", NULL, 0, 0);
-			mciSendString("play boss_battle", NULL, 0, NULL);
+			mciSendString("play boss_battle repeat", NULL, 0, NULL);
 			//setup audio beginning and play till the end of (& four measures) of the main melodies singing in harmony then play that specific harmony(and 4 measures after) over and over until a change in music may happen and have it end (or just switch over)
 			audst1 = uptime + 82200;
 			loo = 1;
 			//printf(" what ");
 		}
 	}
-	if (uptime >= audst1) {
-		mciSendString("close boss_battle", NULL, 0, 0);
-		mciSendString("open audio//fight_song_game_2d_middle.mp3 type mpegvideo alias boss_battle", NULL, 0, 0);
-		mciSendString("play boss_battle", NULL, 0, NULL);
-		audst1 = audst1 + 58000;
-		printf(" wut ");
-		//58250
-	}
+	//mciSendString("close boss_battle", NULL, 0, 0);
 
 }
 
@@ -189,7 +190,6 @@ move(int *error, struct Bullet Bullet1) {
 	SHORT ALTKEYCURR = GetAsyncKeyState(VK_MENU);
 
 
-	
 	if(inbattle == 0){
 		Drawarray(shaderProgrammap1, VAOmap1, 4, GL_TRIANGLE_FAN);
 		Drawarray(shaderProgrammap2, VAOmap2, 4, GL_TRIANGLE_FAN);
@@ -198,6 +198,7 @@ move(int *error, struct Bullet Bullet1) {
 	if (inbattle == 1) {
 		Drawarray(shaderProgramBOSS, VAOBOSS, 4, GL_TRIANGLE_STRIP);
 	}
+	//maybe call flush if there is a lot of draw commands, it might be good to look into for increased performance (search it and get a good understanding beforehand)
 	//all types of GLenum mode types for glDrawArrays & GLDrawElements: GL_TRIANGLE_FAN, GL_TRIANGLE_STRIP, GL_TRIANGLES, GL_POINTS, GL_LINES, GL_LINE_STRIP, GL_LINE_LOOP
 	glBindVertexArray(0);
 	glDeleteProgram(shaderProgramBOSS);
@@ -246,7 +247,7 @@ move(int *error, struct Bullet Bullet1) {
 	}
 
 	if (devmde == 1) {
-		printf("   Ship Front X  %.2f   Ship Front Y  %.2f    time spent open: %d    \n", f, c, uptime);
+		printf("   Ship Front X  %.2f   Ship Front Y  %.2f    time spent open: %dms   \n", f, c, uptime);
 	}
 
 

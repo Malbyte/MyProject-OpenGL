@@ -18,10 +18,11 @@ char song[32];
 move(int *error);
 const GLint WIDTH, HEIGHT;
 
-
 void MoveWKEY();
 void MoveSKEY();
 void MoveAKEY();
 void MoveDKEY();
 void map_audio();
+void deleteVAO();
 void createprograms();
+void Texture(int *width, int *height, int *nrChannels, char Image[125]);

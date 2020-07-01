@@ -173,32 +173,9 @@ main() {
 
 
 	//texture loading
-	unsigned int texture;
 	//quick reminder that unsigned means to instead start from the lowest value in the negatives to the highest value in positives, it instead shifts all over so there is only positives (instead of starting from -x all the way to x, it is instead from 0 to 2x)
-	int width, height, nrChannels;
-	unsigned char *data = stbi_load("temporary-texture.jpg", &width, &height, &nrChannels, 0);
-	//stbi_load loads image data (selects image in first parameter) then outputs the width, height and nrChannels (and returns values required to load image as texture)
-	//setting of currently bound texture of texture wrapping and filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glGenTextures(1, &texture);
-	//glGenTextures takes how many textures we want to have generated then stores them inside the integer which is being pointed to
-	glBindTexture(GL_TEXTURE_2D, texture);
-	//lets you set what type of data will be stored inside, in this case the format for 2d textures will be stored inside of texture
-
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	//glTexImage2D generates a 2d texture using the 2d texture data loaded from an image.
-	//glTexImage2D(texture target(will only generate texture of same target so GL_TEXURE 1D/3D will not be generated as well), mipmap level, what format to sture texture(*for example this current image is RGB therefore we shall tell the function to store it as such*), width of new texture, height of new texture, 0 (legacy command, seems uneeded, maybe check it out sometime?), format of source image(RGB, CMYK, etc), datatype of image, image data)
-	//The top of page 60 in LearnOpengl goes into better detail on glTexImage2D!!
-	glGenerateMipmap(GL_TEXTURE_2D);
-	//
-	stbi_image_free(data);
-	//freeing image from memory so it is not floating about taking up room.
-
-
+	int width = 0, height = 0, nrChannels = 0;
+	Texture(&width, &height, &nrChannels, "temporary-texture.jpg");
 
 
 
@@ -274,12 +251,14 @@ main() {
 		move(&error, &Bullet1);
 		if (error == 1) {
 			printf("Move_Function_Error");
+			break;
 		}
 		int pausbgn = 0;
 		if (escprsd == 1) {
 			while (escprsd == 1){
 				//pause
 				glfwPollEvents();
+				printf("%d, %d, %d\n", width, height, nrChannels);
 				glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 				glClear(GL_COLOR_BUFFER_BIT);
 				mciSendString("pause boss_battle", NULL, 0, 0);
@@ -343,7 +322,9 @@ main() {
 
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
-
+	////
+	deleteVAO();
+	////
 	glfwTerminate;
 	return EXIT_SUCCESS;
 
@@ -375,7 +356,32 @@ main() {
 
 
 
+void Texture(int *width, int *height, int *nrChannels, char Image[125]) {
+	//texture loading
+	unsigned int texture;
+	//quick reminder that unsigned means to instead start from the lowest value in the negatives to the highest value in positives, it instead shifts all over so there is only positives (instead of starting from -x all the way to x, it is instead from 0 to 2x)
+	unsigned char *data = stbi_load(Image, &width, &height, &nrChannels, 0);
+	//stbi_load loads image data (selects image in first parameter) then outputs the width, height and nrChannels (and returns values required to load image as texture)
+	//setting of currently bound texture of texture wrapping and filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glGenTextures(1, &texture);
+	//glGenTextures takes how many textures we want to have generated then stores them inside the integer which is being pointed to
+	glBindTexture(GL_TEXTURE_2D, texture);
+	//lets you set what type of data will be stored inside, in this case the format for 2d textures will be stored inside of texture
 
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	//glTexImage2D generates a 2d texture using the 2d texture data loaded from an image.
+	//glTexImage2D(texture target(will only generate texture of same target so GL_TEXURE 1D/3D will not be generated as well), mipmap level, what format to sture texture(*for example this current image is RGB therefore we shall tell the function to store it as such*), width of new texture, height of new texture, 0 (legacy command, seems uneeded, maybe check it out sometime?), format of source image(RGB, CMYK, etc), datatype of image, image data)
+	//The top of page 60 in LearnOpengl goes into better detail on glTexImage2D!!
+	glGenerateMipmap(GL_TEXTURE_2D);
+	//
+	stbi_image_free(data);
+	//freeing image from memory so it is not floating about taking up room.
+}
 
 
 void Drawarray(int program, int VAO, int amountofvertices, int typeofarray) {
