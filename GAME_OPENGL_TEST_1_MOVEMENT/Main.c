@@ -1,6 +1,6 @@
-#include <gl/glew.h>
+#include "Dependencies/glew-2.1.0-win32/glew-2.1.0/include/GL/glew.h"
 //something to help replace glew maybe? https://www.rastertek.com/gl40tut03.html
-#include <GLFW/glfw3.h>
+#include "Dependencies/glfw-3.3.bin.WIN64/glfw-3.3.bin.WIN64/include/GLFW/glfw3.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -13,14 +13,16 @@
 
 
 //make all Global variables local! 
-int x = 0, error;
+int x = 0, error, LastCallTime;
 float a = -0.04f, b = -0.04f, c = 0.04f, d = -0.04f, e = 0.04f, f = 0.00f, g = 0.98f, h = -0.98f, i = -0.97f, z = 0.0097f, bv1 = 0.7f, bv2 = 0.8f, bv3 = 0.8f, bv4 = 0.8f, bv5 = 0.8f, bv6 = 0.7f, bv7 = 0.9f, bv8 = 0.8f;
 //this is the fallback/normal speed/size/borders/bullets
-
-
-
+float vert_velocity = 0.00128f, gravity = 0.00000281f;
 
 const GLint WIDTH, HEIGHT;
+
+
+
+
 const GLchar *vertexShaderSource = "#version 330 core\n"
 "layout(location = 0) in vec3 aPos;\n"
 "layout(location = 1) in vec3 aColor;\n"
@@ -48,6 +50,11 @@ const GLchar *fragmentShaderSource = "#version 330 core\n"
 "	FragColor = texture(ourTexture, TexCoord);\n"
 //"FragColor = vec4(ourColor, 1.0);\n"
 "}\n";
+
+
+
+
+
 const GLchar *vertexShaderSourcebul = "#version 330 core\n"
 "layout ( location = 0 ) in vec3 position;\n"
 "void main()\n"
@@ -87,8 +94,8 @@ main() {
 	//core profile just uses new opengl stuff
 	//compatabilty uses old way as well
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	//sets to forward compatability for up to newest opengl ^
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+	
 	//sets window to not be able to be resized, just set to true if want to be able to do that
 
 	GLFWwindow * window = glfwCreateWindow(WIDTH, HEIGHT, "LEARNING OPENGL!", NULL, NULL);
@@ -167,7 +174,7 @@ main() {
 
 	glBindVertexArray(0);
 
-	glBindTexture(GL_TEXTURE_2D, 0);
+	//glBindTexture(GL_TEXTURE_2D, 0);
 	//^vertex buffer object & vertex array object^
 	
 
@@ -243,6 +250,34 @@ main() {
 		//checking for events, clearing, rendering OpenGL, etc
 		glfwPollEvents();
 		//is to show window is responding ^
+
+		//gravity i guess
+		if (inbattle == 0) {
+			//have a check to see how long since the last time this was called, if it was more than 1/4 second (like 2/4 seconds) then the person is having low framerate and we want to have this happen once per quarter second so have it do it twice maybe?
+			if (a >= i) {
+				//a, b, and c
+				a = a + vert_velocity;
+				b = b + vert_velocity;
+				c = c + vert_velocity;
+				if (vert_velocity > -0.0058f) {
+					vert_velocity = vert_velocity - gravity;
+					//Right now this is frame dependent, this needs to be time dependent!
+				}
+			}
+			else {
+				vert_velocity = 0;
+			}
+		}
+		//this next part is in case it gains too much speed and goes underneath the map a smidge.  this puts the character back on top (when the math subtracts beneath 1.0)
+		if (b <= -1.01f) {
+			printf("T");
+			c = c - (b - 1.0f);
+			b = b - (b - 1.0f);
+			a = a - (a - 1.0f);
+		}
+
+
+
 		map_audio();
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		//this is here to not have a blank/black background ^
@@ -272,6 +307,9 @@ main() {
 					escprsd = 0;
 				}
 				pausbgn = 1;
+				if (glfwWindowShouldClose(window)) {
+					break;
+				}
 			}
 			pausbgn = 0;
 			Sleep(250);
@@ -288,7 +326,7 @@ main() {
 
 
 		GLfloat vertices[] =
-		{	//positions	       //colors	          //texture coords
+		{	//positions	 //colors	        //texture coords
 			d, a, 0.0f,  1.0f, 0.5f, 0.2f,  1.0f, 1.0f,
 			e, b, 0.0f,  0.0f, 1.0f, 0.0f,  1.0f, 0.0f,
 			f, c, 0.0f,  0.0f, 0.0f, 1.0f,  0.0f, 1.0f
@@ -301,7 +339,8 @@ main() {
 		//glDrawElements(GL_TRIANGLES, 3, GL_FLOAT, 0);
 		glDrawArrays(GL_TRIANGLES, 0, 3);//3 symbolizes the amount of vertices being added
 		glBindVertexArray(0);
-		
+		Drawarray(shaderProgram, VAO, 3, GL_TRIANGLES);
+
 		//drawing bullets on screen
 		GLfloat verticesbullet1[] =
 		{
@@ -327,33 +366,22 @@ main() {
 	////
 	glfwTerminate;
 	return EXIT_SUCCESS;
-
-
-
-	/*SHORT y = 1 << 5;
-	if (y == 32) {
-		printf("howdy");
-	}
-	printf("%d", y);*/
-	while (1) {
-		SHORT WKEYCURR = GetAsyncKeyState(0x57);
-		if (100000 & WKEYCURR) {
-			//it reads it in binary maybe?  100000 is binary version of 32 which is 1<<5
-			//<< operator means move the number over a certain amount of place(add number of zeros to end according to the number to the right[1<<5 means move the 1 digit over 5 places so now it is 100,000])
-			//& is and sign for and input,
-
-			//learn bitwise functions (>>, <<, >>=, <<=)  and the & sign for an equation
-		}
-	}
 }
 #else
 #error OS NOT SUPPORTED
 #endif
 
-
-
-
-
+int tpslc(int *x) {
+	//time    last call
+	int y = 0;
+	clock_t uptime = clock() / (CLOCKS_PER_SEC);
+	if (LastCallTime < uptime) {
+		int y = 1;
+		x = LastCallTime - uptime;
+	}
+	LastCallTime = LastCallTime + uptime;
+	return y;
+}
 
 
 void Texture(int *width, int *height, int *nrChannels, char Image[125]) {
@@ -409,4 +437,8 @@ void MoveDKEY() {
 	d = d + z;
 	e = e + z;
 	f = f + z;
+}
+void jump(int position_x, int position_y, int velocity_x, int velocity_y, int gravity) {
+	//website of information on some game physics such as jumping (can be used for things bouncing and such, basically goes more in depth on how to use the equation of a parabola in game sense [y = ax^2+bx+c])	
+	//https://medium.com/@brazmogu/physics-for-game-dev-a-platformer-physics-cheatsheet-f34b09064558
 }

@@ -1,12 +1,15 @@
-#include <gl/glew.h>
+#include "Dependencies/glew-2.1.0-win32/glew-2.1.0/include/GL/glew.h"
+#include "Dependencies/glfw-3.3.bin.WIN64/glfw-3.3.bin.WIN64/include/GLFW/glfw3.h"
 #include <Windows.h>
 #include <stdio.h>
 #include <time.h>
 #include "main.h"
 #include "GameFuncXtra.h"
 #include "Dependencies/stb-master/stb_image.h"
-#define MAIN_H
 #define move_w 119
+
+//ignore what i said underneath this, I'll fix this soon!
+
 //im dearly sorry if you are trying to read my spagetti code, i tried having the global floats enter and exit through *int and &int inside the move function parenthesis but int* cannot be compared with normal ints... one day it may be revisited and redone to make it "cleaner"
 float a, b, c, d, e, f, g, h, i, y, z, bv1, bv2, bv3, bv4, bv5, bv6, bv7, bv8;
 int loo = 0, audio = 1, audst1 = 0, facing = 1, bullet1onscreen = 0, inbattle = 0, escprsd = 0, devmde = 0, load;
@@ -15,7 +18,10 @@ GLuint vertexShader, fragmentShader, shaderProgrammap1, shaderProgrammap2, verte
 GLuint VBOmap1, VAOmap1;
 GLuint VBOmap2, VAOmap2;
 GLuint VBOBOSS, VAOBOSS;
-//im sorry that these are going to be declared here, i do not know why you are here reading this, you should not be working with these files (unless permitted) and if so there is most likely a higher level program to do that for you
+
+
+float vert_velocity, gravity;
+
 
 const GLchar *vertexShaderSourcemap1 = "#version 330 core\n"
 "layout ( location = 0 ) in vec3 position;\n"
@@ -30,8 +36,13 @@ const GLchar *fragmentShaderSourcemap1 = "#version 330 core\n"
 "{\n"
 "color = vec4( 1.0f, 0.5f, 0.2f, 1.0f );\n"
 "}\n";
+Solids_Hitboxes(char Type_Of_Direction);
 void deleteVAO() {
 	glDeleteVertexArrays(3, &VAOBOSS, &VAOmap1, &VAOmap2);
+	glBindVertexArray(0);
+	glDeleteProgram(shaderProgramBOSS);
+	glDeleteProgram(shaderProgrammap2);
+	glDeleteProgram(shaderProgrammap1);
 }
 
 void createprograms() {
@@ -176,6 +187,9 @@ void map_audio() {
 
 }
 
+
+
+
 move(int *error, struct Bullet Bullet1) {
 	clock_t uptime = clock() / (CLOCKS_PER_SEC / 1000);
 
@@ -200,11 +214,6 @@ move(int *error, struct Bullet Bullet1) {
 	}
 	//maybe call flush if there is a lot of draw commands, it might be good to look into for increased performance (search it and get a good understanding beforehand)
 	//all types of GLenum mode types for glDrawArrays & GLDrawElements: GL_TRIANGLE_FAN, GL_TRIANGLE_STRIP, GL_TRIANGLES, GL_POINTS, GL_LINES, GL_LINE_STRIP, GL_LINE_LOOP
-	glBindVertexArray(0);
-	glDeleteProgram(shaderProgramBOSS);
-	glDeleteProgram(shaderProgrammap2);
-	glDeleteProgram(shaderProgrammap1);
-	
 	///enemy/bullet moves now
 
 	//printf("%.6f", b1b);
@@ -254,7 +263,8 @@ move(int *error, struct Bullet Bullet1) {
 
 
 	//all of this should be moved to the main file Main.c and there should be a 
-	if (100000 & SPCEKEYCURR) {
+	if (inbattle == 1) {
+		if (100000 & SPCEKEYCURR) {
 			if (bullet1onscreen != 1) {
 				Bullet1.v1 = f - 0.005f;
 				Bullet1.v2 = c + 0.04f;
@@ -266,6 +276,7 @@ move(int *error, struct Bullet Bullet1) {
 				Bullet1.v8 = c + 0.06f;
 				bullet1onscreen = 1;
 			}
+		}
 	}
 
 
@@ -290,18 +301,20 @@ move(int *error, struct Bullet Bullet1) {
 		escprsd = 1;
 	}
 
+
+	
 	if (100000 & WKEYCURR) {
 		facing = 1;
 		if (c <= g) {
 			if(inbattle == 0){
-				if (Solids_Hitboxes(move_w) == 0) {
-					MoveWKEY();
-				}
+				vert_velocity = 0.000128f;
+				a = a + 0.1f;
+				b = b + 0.1f;
+				c = c + 0.1f;
 			}
 			if (inbattle == 1) {
 				for (int x = 0; x <= 0; x++) {
 					MoveWKEY();
-					//do 4 times so it still goes double but it looks smoother
 				}
 			}
 		}
@@ -314,12 +327,12 @@ move(int *error, struct Bullet Bullet1) {
 		facing = 2;
 		if (a >= i) {
 			if(inbattle == 0){
+				//this is harder to read and is very non efficient.  maybe there is some way to use a lookup table?
 				if (a > 0.8621f || e < -0.799f || d > 0.799f || a < 0.81f) {
 					if (a > -0.8f || e < -0.799f || d > 0.799f || a < -0.849f) {
 						for (int x = 0; x <= 0; x++) {
 							MoveSKEY();
 							//change player's movement/position
-							//do a second time so it still goes double but it looks smoother
 						}
 					}
 				}
@@ -327,7 +340,6 @@ move(int *error, struct Bullet Bullet1) {
 			if (inbattle == 1) {
 				for (int x = 0; x <= 0; x++) {
 					MoveSKEY();
-					//do a second time so it still goes double but it looks smoother
 				}
 			}
 		}

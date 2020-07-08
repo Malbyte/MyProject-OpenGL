@@ -12,7 +12,7 @@ struct Bullet {
 #endif // !
 
 float a, b, c, d, e, f, g, h, i, z, bv1, bv2, bv3, bv4, bv5, bv6;
-
+float vert_velocity, gravity;
 int inbattle, escprsd, bullet1onscreen;
 char song[32];
 move(int *error);
@@ -25,4 +25,5 @@ void MoveDKEY();
 void map_audio();
 void deleteVAO();
 void createprograms();
+void jump();
 void Texture(int *width, int *height, int *nrChannels, char Image[125]);
