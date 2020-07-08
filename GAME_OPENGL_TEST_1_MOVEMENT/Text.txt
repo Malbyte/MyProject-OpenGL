@@ -14,3 +14,11 @@ if collision.  it could possibly check an array of vertices of the hitboxes of e
 -have glew.dll be saved when programmed is installed inside the program x86 folder as a seperate folder (first have it checked if it is already installed with all the other prequisite libraries)
 
 -try to get Drawarray function into GameFuncXtra.c instead of Main.c and have it work
+
+
+
+-a star in a comment may usually mean to fact check the statement
+
+-ProgramShadR is causing memory leak issues (FIXED ISSUE)
+
+-new time based movement instead of frame based movement

@@ -3,7 +3,7 @@
 void vertexShadR(int *input_frag_shader, const char *vertexShaderSource);
 //produces fragment shader
 void fragmentShadR(int *fragmentShaderplz, const char *fragmentShaderSource);
-//combines shaders
+//combines shaders into shaderprogram
 void ProgramShadR(GLuint *shaderProgram, int vertexShader, int fragmentShader);
 //checks if it loaded successfully
 void isSucessful_Load(int *Success, int *shader, GLchar *infolog, GLchar TYPE_OF_SHADER);

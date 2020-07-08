@@ -1,8 +1,7 @@
-﻿  Main.c
-c:\program files (x86)\windows kits\10\include\10.0.17763.0\shared\minwindef.h(130): warning C4005: 'APIENTRY': macro redefinition
-  c:\users\lapto\source\repos\project3\game_opengl_test_1_movement\dependencies\glfw-3.3.bin.win64\glfw-3.3.bin.win64\include\glfw\glfw3.h(104): note: see previous definition of 'APIENTRY'
-c:\users\lapto\source\repos\project3\game_opengl_test_1_movement\main.c(268): warning C4550: expression evaluates to a function which is missing an argument list
-  Map1.c
-  Generating Code...
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+﻿  Map1.c
+c:\users\lapto\source\repos\project3\game_opengl_test_1_movement\map1.c(34): warning C4020: '__glewDeleteVertexArrays': too many actual parameters
+c:\users\lapto\source\repos\project3\game_opengl_test_1_movement\map1.c(161): warning C4020: '__glewDeleteBuffers': too many actual parameters
+c:\users\lapto\source\repos\project3\game_opengl_test_1_movement\map1.c(179): warning C4029: declared formal parameter list different from definition
+c:\users\lapto\source\repos\project3\game_opengl_test_1_movement\map1.c(297): warning C4013: 'Solids_Hitboxes' undefined; assuming extern returning int
+c:\users\lapto\source\repos\project3\game_opengl_test_1_movement\map1.c(378): warning C4715: 'Solids_Hitboxes': not all control paths return a value
   GAME_OPENGL_TEST_1_MOVEMENT.vcxproj -> C:\Users\Lapto\source\repos\Project3\x64\Debug\GAME_OPENGL_TEST_1_MOVEMENT.exe

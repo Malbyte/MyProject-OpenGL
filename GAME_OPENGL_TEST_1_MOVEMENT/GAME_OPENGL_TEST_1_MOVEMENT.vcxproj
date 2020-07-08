@@ -76,13 +76,13 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Lapto\source\repos\Project3\GAME_OPENGL_TEST_1_MOVEMENT\Dependencies\glew-2.1.0-win32\glew-2.1.0\include;C:\Users\Lapto\source\repos\Project3\GAME_OPENGL_TEST_1_MOVEMENT\soil\Simple OpenGL Image Library\src;C:\Users\Lapto\source\repos\Project3\GAME_OPENGL_TEST_1_MOVEMENT\Dependencies\glfw-3.3.bin.WIN64\glfw-3.3.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Lapto\source\repos\Project3\GAME_OPENGL_TEST_1_MOVEMENT\Dependencies\glew-2.1.0-win32\glew-2.1.0\include;C:\Users\Lapto\source\repos\Project3\GAME_OPENGL_TEST_1_MOVEMENT\Dependencies\glfw-3.3.bin.WIN64\glfw-3.3.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\Users\Lapto\source\repos\Project3\GAME_OPENGL_TEST_1_MOVEMENT\Dependencies\glew-2.1.0-win32\glew-2.1.0\lib\Release\x64;C:\Users\Lapto\source\repos\Project3\GAME_OPENGL_TEST_1_MOVEMENT\Dependencies\glfw-3.3.bin.WIN64\glfw-3.3.bin.WIN64\lib-vc2017;C:\Users\Lapto\source\repos\Project3\GAME_OPENGL_TEST_1_MOVEMENT\soil\Simple OpenGL Image Library\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libSOIL.lib;glew32.lib;glfw3.lib;opengl32.lib;winmm.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Lapto\source\repos\Project3\GAME_OPENGL_TEST_1_MOVEMENT\Dependencies\glew-2.1.0-win32\glew-2.1.0\lib\Release\x64;C:\Users\Lapto\source\repos\Project3\GAME_OPENGL_TEST_1_MOVEMENT\Dependencies\glfw-3.3.bin.WIN64\glfw-3.3.bin.WIN64\lib-vc2017;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;glfw3.lib;opengl32.lib;winmm.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
