@@ -1,7 +1,11 @@
-#include "GL/glew.h"
-#include "GLFW/glfw3.h"
+#include "Dependencies/glew-2.1.0-win32/glew-2.1.0/include/GL/glew.h"
+#include "Dependencies/glfw-3.3.bin.WIN64/glfw-3.3.bin.WIN64/include/GLFW/glfw3.h"
 #include "GameFuncXtra.h"
 
+//
+
+//
+#ifdef FUNCXTRA_GRAPHICS
 
 void vertexShadR(int *input_frag_shader, const char *vertexShaderSource) {
 	*input_frag_shader = glCreateShader(GL_VERTEX_SHADER);
@@ -21,3 +25,4 @@ void ProgramShadR(GLuint *shaderProgram, int vertexShader, int fragmentShader) {
 	glLinkProgram(*shaderProgram);
 
 }
+#endif

@@ -22,3 +22,17 @@ if collision.  it could possibly check an array of vertices of the hitboxes of e
 -ProgramShadR is causing memory leak issues (FIXED ISSUE)
 
 -new time based movement instead of frame based movement
+
+-MULTIPLE THREADS!  this can allow for processing to be divided among the cores where one can handle drawing to screen, one can handle inputs, and one can handle calculations (one can also be used for a bunch of debugging purposes maybe even!)  just remember to not have that many threads, only a couple are needed (things that need to be run seperately/parallel for dramatic increased performance)
+
+for adding health in a corner, we can have a couple of small squares where we can draw a heart with an invisible background
+
+//use fread function to load shadersources
+
+
+
+
+
+
+
+strcat to append strings onto one and other

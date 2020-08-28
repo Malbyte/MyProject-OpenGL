@@ -1,0 +1,37 @@
+﻿  Main_File.c
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(121,27): warning C4047: '=': 'int' differs in levels of indirection from 'void *'
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(128,57): warning C4047: '=': 'char *' differs in levels of indirection from 'char'
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(139,45): warning C4047: 'function': 'GLuint *' differs in levels of indirection from 'unsigned int **'
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(139,18): warning C4024: 'ProgramShadR': different types for formal and actual parameter 1
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(148,38): warning C4047: 'function': 'GLuint *' differs in levels of indirection from 'unsigned int **'
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(148,26): warning C4024: '__glewGenVertexArrays': different types for formal and actual parameter 2
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(151,34): warning C4047: 'function': 'GLuint' differs in levels of indirection from 'unsigned int *'
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(151,29): warning C4024: '__glewBindVertexArray': different types for formal and actual parameter 1
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(154,60): warning C4047: '=': 'int' differs in levels of indirection from 'int *'
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(195,27): warning C4047: '=': 'string' differs in levels of indirection from 'void *'
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(196,22): warning C4047: '=': 'int' differs in levels of indirection from 'void *'
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(198,27): warning C4047: '=': 'int' differs in levels of indirection from 'void *'
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(216,34): warning C4047: 'function': 'int' differs in levels of indirection from 'unsigned int *'
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(216,26): warning C4024: 'Drawarray': different types for formal and actual parameter 1
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(216,49): warning C4047: 'function': 'int' differs in levels of indirection from 'unsigned int *'
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(216,45): warning C4024: 'Drawarray': different types for formal and actual parameter 2
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(216,75): warning C4047: 'function': 'int' differs in levels of indirection from 'char *'
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(216,63): warning C4024: 'Drawarray': different types for formal and actual parameter 4
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(250,41): warning C4047: 'function': 'const GLuint *' differs in levels of indirection from 'unsigned int **'
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(250,27): warning C4024: '__glewDeleteVertexArrays': different types for formal and actual parameter 2
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(254,36): warning C4047: 'function': 'GLuint' differs in levels of indirection from 'unsigned int *'
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(254,28): warning C4024: '__glewDeleteProgram': different types for formal and actual parameter 1
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(256,20): warning C4022: 'free': pointer mismatch for actual parameter 1
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(378,35): warning C4047: '==': 'int' differs in levels of indirection from 'void *'
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(389,56): warning C4047: '=': 'char' differs in levels of indirection from 'char [13]'
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(397,35): warning C4047: '==': 'int' differs in levels of indirection from 'void *'
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(323,1): warning C4047: 'initializing': 'int' differs in levels of indirection from 'void *'
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(323,1): warning C4047: 'initializing': 'string' differs in levels of indirection from 'void *'
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(323,1): warning C4047: 'initializing': 'char' differs in levels of indirection from 'void *'
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(376,6): warning C4101: 'FragmentShader': unreferenced local variable
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(375,6): warning C4101: 'VertexShader': unreferenced local variable
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(421,126): warning C4029: declared formal parameter list different from definition
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(423,29): warning C4047: '!=': 'int' differs in levels of indirection from 'void *'
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(437,44): warning C4047: '=': 'float (*)[0]' differs in levels of indirection from 'float **'
+C:\Users\Lapto\source\repos\Project3\Game_Engine_or_something\Main_File.c(458): warning C4715: 'Graphic_IO': not all control paths return a value
+  Game_Engine_or_something.vcxproj -> C:\Users\Lapto\source\repos\Project3\x64\Debug\Game_Engine_or_something.exe

@@ -24,6 +24,9 @@
     <ClCompile Include="GameFuncXtra.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Levels_Data.c">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">

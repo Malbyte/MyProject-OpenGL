@@ -1,7 +1,11 @@
 ﻿  Map1.c
-c:\users\lapto\source\repos\project3\game_opengl_test_1_movement\map1.c(34): warning C4020: '__glewDeleteVertexArrays': too many actual parameters
-c:\users\lapto\source\repos\project3\game_opengl_test_1_movement\map1.c(161): warning C4020: '__glewDeleteBuffers': too many actual parameters
-c:\users\lapto\source\repos\project3\game_opengl_test_1_movement\map1.c(179): warning C4029: declared formal parameter list different from definition
-c:\users\lapto\source\repos\project3\game_opengl_test_1_movement\map1.c(297): warning C4013: 'Solids_Hitboxes' undefined; assuming extern returning int
-c:\users\lapto\source\repos\project3\game_opengl_test_1_movement\map1.c(378): warning C4715: 'Solids_Hitboxes': not all control paths return a value
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': macro redefinition
+C:\Users\Lapto\source\repos\Project3\GAME_OPENGL_TEST_1_MOVEMENT\Dependencies\glfw-3.3.bin.WIN64\glfw-3.3.bin.WIN64\include\GLFW\glfw3.h(104): message : see previous definition of 'APIENTRY'
+C:\Users\Lapto\source\repos\Project3\GAME_OPENGL_TEST_1_MOVEMENT\Map1.c(17,74): warning C4142: 'shaderProgrammap2': benign redefinition of type
+C:\Users\Lapto\source\repos\Project3\GAME_OPENGL_TEST_1_MOVEMENT\main.h(46): message : see declaration of 'shaderProgrammap2'
+C:\Users\Lapto\source\repos\Project3\GAME_OPENGL_TEST_1_MOVEMENT\Map1.c(18,24): warning C4142: 'VAOmap1': benign redefinition of type
+C:\Users\Lapto\source\repos\Project3\GAME_OPENGL_TEST_1_MOVEMENT\main.h(46): message : see declaration of 'VAOmap1'
+C:\Users\Lapto\source\repos\Project3\GAME_OPENGL_TEST_1_MOVEMENT\Map1.c(41,36): warning C4020: '__glewDeleteVertexArrays': too many actual parameters
+C:\Users\Lapto\source\repos\Project3\GAME_OPENGL_TEST_1_MOVEMENT\Map1.c(174,31): warning C4020: '__glewDeleteBuffers': too many actual parameters
+C:\Users\Lapto\source\repos\Project3\GAME_OPENGL_TEST_1_MOVEMENT\Map1.c(197,24): warning C4028: formal parameter 1 different from declaration
   GAME_OPENGL_TEST_1_MOVEMENT.vcxproj -> C:\Users\Lapto\source\repos\Project3\x64\Debug\GAME_OPENGL_TEST_1_MOVEMENT.exe
